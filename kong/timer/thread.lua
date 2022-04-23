@@ -77,6 +77,7 @@ local function callback_wraper(premature, self)
                 ))
 
             else
+                self.counter.runs = 0
                 break
             end
 
