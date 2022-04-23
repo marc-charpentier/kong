@@ -399,6 +399,8 @@ for _, cluster_protocol in ipairs{"json", "wrpc"} do
             cluster_ca_cert = "spec/fixtures/ocsp_certs/ca.crt",
           }))
 
+          set_ocsp_status("error")
+
           assert(helpers.start_kong({
             role = "data_plane",
             cluster_protocol = cluster_protocol,
@@ -414,7 +416,6 @@ for _, cluster_protocol in ipairs{"json", "wrpc"} do
             cluster_ca_cert = "spec/fixtures/ocsp_certs/ca.crt",
           }))
 
-          set_ocsp_status("error")
         end)
 
         lazy_teardown(function()
@@ -422,7 +423,7 @@ for _, cluster_protocol in ipairs{"json", "wrpc"} do
           helpers.stop_kong()
         end)
         describe("status API", function()
-          it("shows DP status", function()
+          it("shows DP status #only", function()
             helpers.wait_until(function()
               local admin_client = helpers.admin_client()
               finally(function()
@@ -431,6 +432,9 @@ for _, cluster_protocol in ipairs{"json", "wrpc"} do
 
               local res = assert(admin_client:get("/clustering/data-planes"))
               local body = assert.res_status(200, res)
+
+              -- ngx.log(ngx.ERR, body)
+
               local json = cjson.decode(body)
 
               for _, v in pairs(json.data) do
