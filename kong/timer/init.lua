@@ -496,6 +496,7 @@ function _M:start()
     local ok, err
 
     if not self.is_all_threads_created then
+
         ok, err = create_all_threads_atomic(self, 5)
 
         if not ok then
@@ -505,9 +506,6 @@ function _M:start()
         self.is_all_threads_created = true
     end
 
-    ngx_update_time()
-    self.wheels.real_time = ngx_now()
-    self.wheels.expected_time = self.wheels.real_time
 
     self.enable = true
 
